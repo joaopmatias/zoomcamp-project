@@ -109,11 +109,13 @@ AIRFLOW_CONN_GOOGLE_CLOUD_DEFAULT: 'google-cloud-platform://?extra__google_cloud
 ```
 
 ```
-
+prefect orion start
+prefect agent start  --work-queue "default"
+prefect work-queue set-concurrency-limit default 3
 ```
 
 ```
-
+prefect deployment run web_to_gcs/web_to_gcs -p color=fhv -p month=$i -p year=2019
 ```
 
 ```

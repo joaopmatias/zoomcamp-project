@@ -18,6 +18,12 @@ variables.tf
 
 configure google auth??
 
+I guess, GOOGLE_APPLICATION_CREDENTIALS
+
+and
+
+gcloud auth activate-service-account --key-file $GOOGLE_APPLICATION_CREDENTIALS
+
 ## dbt
 
 files??
