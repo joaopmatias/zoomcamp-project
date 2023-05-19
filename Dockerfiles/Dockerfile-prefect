@@ -1,0 +1,15 @@
+FROM python:3.9-slim-bullseye
+
+RUN apt-get update
+RUN rm /bin/sh && ln -s /bin/bash /bin/sh
+RUN apt-get -qq -y install curl wget unzip zip
+
+RUN pip install -U pip
+RUN pip install prefect prefect-gcp[cloud_storage] kaggle
+
+WORKDIR /apps
+COPY requirements.txt .
+COPY entrypoint-prefect.sh entrypoint-prefect.sh
+COPY ./prefect/my_flows.py my_flows.py
+
+ENTRYPOINT ["bash", "entrypoint-prefect.sh"]

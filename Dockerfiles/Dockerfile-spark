@@ -1,0 +1,25 @@
+FROM debian:bullseye-slim
+
+RUN apt-get update
+RUN rm /bin/sh && ln -s /bin/bash /bin/sh
+RUN apt-get -qq -y install curl wget unzip zip procps
+
+RUN curl -s "https://get.sdkman.io" | bash
+RUN source "/root/.sdkman/bin/sdkman-init.sh" && sdk update
+RUN source "/root/.sdkman/bin/sdkman-init.sh" && sdk install java 11.0.19-tem
+RUN source "/root/.sdkman/bin/sdkman-init.sh" && sdk install scala 3.2.2
+RUN source "/root/.sdkman/bin/sdkman-init.sh" && sdk install spark 3.3.2
+RUN source "/root/.sdkman/bin/sdkman-init.sh" && sdk install hadoop 3.3.5
+
+WORKDIR /apps
+
+RUN source "/root/.sdkman/bin/sdkman-init.sh" && \
+    wget -P $SPARK_HOME/jars \
+    https://github.com/GoogleCloudDataproc/spark-bigquery-connector/releases/download/0.30.0/spark-3.3-bigquery-0.30.0.jar
+RUN source "/root/.sdkman/bin/sdkman-init.sh" && \
+    wget -P $SPARK_HOME/jars \
+    https://github.com/GoogleCloudDataproc/hadoop-connectors/releases/download/v2.2.12/gcs-connector-hadoop3-2.2.12-shaded.jar
+
+COPY entrypoint-spark.sh entrypoint-spark.sh
+
+ENTRYPOINT ["bash", "entrypoint-spark.sh"]

@@ -1,0 +1,34 @@
+version: '3.9'
+services:
+  prefect:
+    build:
+      context: .
+      dockerfile: Dockerfiles/Dockerfile-prefect
+    restart: always
+    volumes:
+      - prefect:/root/.prefect
+    environment:
+      - PREFECT_UI_URL=http://127.0.0.0:4200/api
+      - PREFECT_API_URL=http://127.0.0.1:4200/api
+      - PREFECT_SERVER_API_HOST=0.0.0.0
+      - KAGGLE_CONFIG_DIR=/mnt/.kaggle
+    ports:
+      - 4200:4200
+    volumes:
+      - ./.kaggle:/mnt/.kaggle
+      - ./.gc:/mnt/.gc
+  spark:
+    build:
+      context: .
+      dockerfile: Dockerfiles/Dockerfile-spark
+    environment:
+      - SPARK_MASTER_HOST=0.0.0.0
+      - GOOGLE_APPLICATION_CREDENTIALS=/mnt/.gc/taxi-rides-ny-373121-83cac15e98a3.json
+    volumes:
+      - ./.gc:/mnt/.gc
+    ports:
+      - 8080:8080
+      - 7077:7077
+volumes:
+  prefect:
+    driver: local
