@@ -27,4 +27,29 @@ prefect deployment run kaggle-to-gcs/kaggle_to_gcs -p name=jl8771/2022-us-airlin
 
 $SPARK_HOME/bin/spark-submit --master spark://127.0.0.1:7077 --jars gcs-connector-hadoop3-2.2.12-shaded.jar,spark-3.3-bigquery-0.30.0.jar  spark/job.py
 
+dbt init
+
+dbt build
+
+dbt run
+
+```
+
+profiles.yml
+
+```
+dbt_taxi:
+  outputs:
+    dev:
+      dataset: zoomcamp_project_bq
+      job_execution_timeout_seconds: 300
+      job_retries: 1
+      keyfile: /home/joaopmatias/.gc/taxi-rides-ny-373121-83cac15e98a3.json
+      location: europe-southwest1
+      method: service-account
+      priority: interactive
+      project: taxi-rides-ny-373121
+      threads: 2
+      type: bigquery
+  target: dev
 ```
